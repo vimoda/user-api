@@ -1,0 +1,14 @@
+import { Module } from '@nestjs/common';
+import { UserController } from './controllers/user.controller';
+import { AuthController } from './controllers/auth.controller';
+import { JwtAuthGuard } from './guards/jwt-auth.guard';
+import { JwtModule } from '@nestjs/jwt';
+import { UserModule } from '../../app/user.module';
+
+@Module({
+  imports: [JwtModule.register({}), UserModule],
+  controllers: [UserController, AuthController],
+  providers: [JwtAuthGuard],
+  exports: []
+})
+export class HttpModule {}

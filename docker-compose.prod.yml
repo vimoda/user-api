@@ -1,0 +1,32 @@
+version: "3.9"
+
+services:
+  users-api:
+    container_name: users-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - .env
+    restart: unless-stopped
+    networks:
+      - traefik-net  # Red compartida con Traefik
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.users-api.entrypoints=websecure"
+      - "traefik.http.routers.users-api.tls.certresolver=letsencrypt"
+      - "traefik.http.services.users-api.loadbalancer.server.port=${PORT}"
+      - "traefik.http.routers.users-api.middlewares=users-api-stripprefix"
+      - "traefik.http.middlewares.users-api-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.docker.network=traefik-net"
+
+networks:
+  traefik-net:
+    external: true  # Red externa compartida con Traefik
