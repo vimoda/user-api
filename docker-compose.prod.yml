@@ -19,7 +19,7 @@ services:
       start_period: 40s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.users-api.rule=Host(`api.${DOMAIN}`)"  # ← CAMBIADO: subdomain
+      - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"  # ← CAMBIADO: subdomain
       - "traefik.http.routers.users-api.entrypoints=websecure"
       - "traefik.http.routers.users-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.users-api.loadbalancer.server.port=${PORT}"
