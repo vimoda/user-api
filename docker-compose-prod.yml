@@ -1,5 +1,4 @@
 version: "3.9"
-
 services:
   users-api:
     container_name: users-api
@@ -19,12 +18,11 @@ services:
       start_period: 40s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"  # ← CAMBIADO: subdomain
+      - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"
       - "traefik.http.routers.users-api.entrypoints=websecure"
       - "traefik.http.routers.users-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.users-api.loadbalancer.server.port=${PORT}"
-      - "traefik.http.routers.users-api.middlewares=security-headers,ratelimit"  # ← REMOVIDO: stripprefix
-      # REMOVIDO: "traefik.http.middlewares.users-api-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.http.routers.users-api.middlewares=security-headers,ratelimit"
       - "traefik.docker.network=store_network"
 
 networks:
