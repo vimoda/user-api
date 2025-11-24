@@ -23,7 +23,6 @@ services:
       - "traefik.http.routers.users-api.entrypoints=websecure"
       - "traefik.http.routers.users-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.users-api.loadbalancer.server.port=${PORT}"
-      - "raefik.http.services.api-admin.loadbalancer.server.port=5000"
       - "traefik.http.routers.users-api.middlewares=security-headers,ratelimit"  # ← REMOVIDO: stripprefix
       # REMOVIDO: "traefik.http.middlewares.users-api-stripprefix.stripprefix.prefixes=/api"
       - "traefik.docker.network=store_network"
