@@ -10,12 +10,12 @@ services:
     restart: unless-stopped
     networks:
       - store_network
-    #healthcheck:
-    #  test: ["CMD", "curl", "-f", "http://localhost:${PORT}/health"]
-    #  interval: 30s
-    #  timeout: 10s
-    #  retries: 3
-    #  start_period: 40s
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:${PORT}/v1/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"
