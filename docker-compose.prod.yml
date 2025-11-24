@@ -10,7 +10,7 @@ services:
       - .env
     restart: unless-stopped
     networks:
-      - traefik-net  # Red compartida con Traefik
+      - store_network
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:${PORT}/health"]
       interval: 30s
@@ -19,14 +19,14 @@ services:
       start_period: 40s
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.users-api.rule=Host(`${DOMAIN}`)"
+      - "traefik.http.routers.users-api.rule=Host(`api.${DOMAIN}`)"  # ← CAMBIADO: subdomain
       - "traefik.http.routers.users-api.entrypoints=websecure"
       - "traefik.http.routers.users-api.tls.certresolver=letsencrypt"
       - "traefik.http.services.users-api.loadbalancer.server.port=${PORT}"
-      - "traefik.http.routers.users-api.middlewares=users-api-stripprefix"
-      - "traefik.http.middlewares.users-api-stripprefix.stripprefix.prefixes=/api"
-      - "traefik.docker.network=traefik-net"
+      - "traefik.http.routers.users-api.middlewares=security-headers,ratelimit"  # ← REMOVIDO: stripprefix
+      # REMOVIDO: "traefik.http.middlewares.users-api-stripprefix.stripprefix.prefixes=/api"
+      - "traefik.docker.network=store_network"
 
 networks:
-  traefik-net:
-    external: true  # Red externa compartida con Traefik
+  store_network:
+    external: true
